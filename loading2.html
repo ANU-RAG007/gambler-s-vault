@@ -1,69 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loading...</title>
-    <style>
-        /* Full page setup */
-        body, html {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            font-family: Arial, sans-serif;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loading...</title>
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
 
-        /* Background video styling */
-        .background-video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;  /* Makes sure the video covers the whole page */
-            z-index: -1;  /* Puts video behind text */
-        }
-        
-        /* Styling the loading text */
-        .loading-text span {
-            display: inline-block;
-            animation: blink 1.5s step-end infinite;
-            font-size: 2rem;
-            color: #fff;
-        }
+    .background-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
 
-        /* Blinking animation for loading text */
-        @keyframes blink {
-            50% {
-                opacity: 0;
-            }
-        }
-    </style>
+    .loading-text span {
+      display: inline-block;
+      animation: blink 1.5s step-end infinite;
+      font-size: 2rem;
+      color: #fff;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    /* Ensuring text is well-aligned on all devices */
+    .loading-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 4vw; /* Makes text size responsive */
+      text-align: center;
+    }
+
+    /* Adjustments for mobile and tablet */
+    @media (max-width: 768px) {
+      .loading-text {
+        font-size: 6vw; /* Larger text on smaller screens */
+      }
+    }
+
+    @media (max-width: 480px) {
+      .loading-text {
+        font-size: 8vw; /* Even larger text on small screens */
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Background video element (Replace the src with your video later) -->
-    <video class="background-video" autoplay muted loop>
-        <source src="bg3.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-    </div>
+  <!-- Background Video -->
+  <video class="background-video" autoplay muted loop>
+    <source src="bg3.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
 
-    <script>
-        // Get redirect URL from query string
-        const params = new URLSearchParams(window.location.search);
-        const redirectURL = params.get("redirect");
+  <!-- Loading Sound -->
+  <audio id="sound" src="sound.mp3"></audio> <!-- Replace with your file -->
 
-        // Redirect after 5 seconds
-        if (redirectURL) {
-            setTimeout(() => {
-                window.location.href = redirectURL;
-            }, 5000);
-        } else {
-            document.body.innerHTML = "<p>Redirect link not found.</p>";
-        }
-    </script>
+  <script>
+    // Play loading sound
+    const sound = document.getElementById("sound");
+    sound.volume = 1;
+
+    // Try to play on load
+    window.addEventListener("DOMContentLoaded", () => {
+      sound.play().catch((err) => {
+        console.warn("Autoplay failed, trying muted:", err);
+        sound.muted = false;
+        sound.play(); // fallback
+      });
+    });
+
+    // Redirect after 5 seconds
+    const params = new URLSearchParams(window.location.search);
+    const redirectURL = params.get("redirect");
+
+    if (redirectURL) {
+      setTimeout(() => {
+        window.location.href = redirectURL;
+      }, 5000);
+    } else {
+      document.body.innerHTML = "<p>Redirect link not found.</p>";
+    }
+  </script>
 
 </body>
 </html>
