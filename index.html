@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Molly's Vault 🎰</title>
+
+  <!-- Font Import -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tagesschrift&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Tagesschrift', sans-serif;
+      overflow-x: hidden; /* Allow vertical scroll */
+    }
+
+    #bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      color: #fff;
+    }
+
+    .profile-img {
+      width: 22vw;
+      max-width: 150px;
+      height: auto;
+      aspect-ratio: 1/1;
+      border-radius: 50%;
+      border: 4px solid #00ffff;
+      box-shadow: 0 0 15px #00ffff;
+      object-fit: cover;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      color: #ffcc00;
+      text-shadow: 0 0 10px red, 0 0 20px red;
+      margin-bottom: 30px;
+    }
+
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      width: 100%;
+      max-width: 340px;
+    }
+
+    .link-button {
+      font-family: 'Tagesschrift', sans-serif;
+      background: rgba(0, 0, 0, 0.6);
+      border: 2px solid #00ffff;
+      color: #fff;
+      padding: 14px 18px;
+      font-size: 1.1rem;
+      text-align: center;
+      border-radius: 50px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      transition: all 0.3s ease-in-out;
+      position: relative;
+    }
+
+    .link-button:hover {
+      background-color: gold;
+      color: black;
+      transform: scale(1.05);
+      box-shadow: 0 0 20px gold;
+    }
+
+    .link-button::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50px;
+      padding: 2px;
+      background: linear-gradient(45deg, red, gold, orange, red);
+      z-index: -1;
+      filter: blur(10px);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .link-button:hover::after {
+      opacity: 1;
+    }
+
+    .link-button.clicked {
+      animation: clickPulse 0.4s ease;
+    }
+
+    @keyframes clickPulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0px rgba(0, 255, 255, 0.7);
+      }
+      50% {
+        transform: scale(0.95);
+        box-shadow: 0 0 20px 10px rgba(0, 255, 255, 0.9);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0px rgba(0, 255, 255, 0.7);
+      }
+    }
+
+    #particle-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .particle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: radial-gradient(circle, #00ffff 30%, transparent 70%);
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: fly 700ms ease-out forwards;
+    }
+
+    @keyframes fly {
+      0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--x), var(--y)) scale(0.5);
+        opacity: 0;
+      }
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 40px 20px;
+      }
+
+      .button-container {
+        gap: 20px;
+      }
+
+      .link-button {
+        padding: 12px 16px;
+        font-size: 1rem;
+      }
+
+      .profile-img {
+        width: 30vw;
+        max-width: 120px;
+      }
+
+      h1 {
+        font-size: clamp(1.5rem, 8vw, 2.5rem);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <video autoplay muted loop id="bg-video">
+    <source src="bg.mp4" type="video/mp4">
+    Your browser does not support HTML5 video.
+  </video>
+
+  <div class="overlay"></div>
+
+  <div class="container">
+    <img src="profile.jpg" alt="Molly" class="profile-img" />
+    <h1>Molly's Vault 🎰</h1>
+    <div class="button-container">
+      <a href="#" class="link-button" onclick="playSound(event, 'loading2.html?redirect=https://x.com/Heaven__Missy?t=7_FrATPgDuI7OYLjohlB1A&s=09')">
+        <i class="fa-brands fa-x-twitter"></i> <span>Twitter(X)</span>
+      </a>
+      <a href="#" class="link-button" onclick="playSound(event, 'loading2.html?redirect=https://heavenonline.io')">
+        <i class="fas fa-dice"></i> <span>HeavenOnline</span>
+      </a>
+<a href="#" class="link-button" onclick="playSound(event, 'loading2.html')">
+        <i class="fab fa-youtube"></i> <span>YouTube</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Particle Container -->
+  <div id="particle-container"></div>
+
+  <!-- Sound Effect -->
+  <audio id="clickSound" src="coindrop.mp3"></audio>
+
+  <script>
+    function playSound(e, redirectURL) {
+      const sound = document.getElementById("clickSound");
+      if (sound) {
+        sound.currentTime = 0;
+        sound.play();
+      }
+
+      const btn = e.currentTarget;
+      btn.classList.remove("clicked");
+      void btn.offsetWidth;
+      btn.classList.add("clicked");
+      spawnParticles(e);
+
+      // Wait for the sound to finish before redirecting
+      sound.onended = function() {
+        window.location.href = redirectURL;
+      };
+    }
+
+    function spawnParticles(e) {
+      const container = document.getElementById("particle-container");
+      for (let i = 0; i < 15; i++) {
+        const particle = document.createElement("div");
+        particle.classList.add("particle");
+
+        const angle = Math.random() * 2 * Math.PI;
+        const distance = 40 + Math.random() * 40;
+        const x = Math.cos(angle) * distance + "px";
+        const y = Math.sin(angle) * distance + "px";
+
+        particle.style.setProperty("--x", x);
+        particle.style.setProperty("--y", y);
+
+        // Use pageX/pageY for better mobile support
+        particle.style.left = (e.pageX || 0) + "px";
+        particle.style.top = (e.pageY || 0) + "px";
+
+        container.appendChild(particle);
+        setTimeout(() => particle.remove(), 700);
+      }
+    }
+  </script>
+
+</body>
+</html>
